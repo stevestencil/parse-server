@@ -1,6 +1,6 @@
 {
   "name": "@leapllc/parse-server",
-  "version": "3.10.4",
+  "version": "3.10.5",
   "description": "An express module providing a Parse-compatible API server",
   "main": "lib/index.js",
   "repository": {
@@ -45,7 +45,7 @@
     "mime": "2.4.4",
     "mongodb": "3.4.1",
     "node-rsa": "1.0.7",
-    "@leapllc/parse": "^2.11.0",
+    "parse": "npm:@leapllc/parse@^2.11.1",
     "pg-promise": "10.3.3",
     "pluralize": "^8.0.0",
     "redis": "2.8.0",
