@@ -1,5 +1,5 @@
 import PromiseRouter from '../PromiseRouter';
-import Parse from 'parse/node';
+import Parse from '@leapllc/parse/node';
 import rest from '../rest';
 const triggers = require('../triggers');
 const middleware = require('../middlewares');

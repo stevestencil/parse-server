@@ -1,6 +1,6 @@
 const crypto = require('crypto');
 const httpsRequest = require('./httpsRequest');
-const Parse = require('parse/node').Parse;
+const Parse = require('@leapllc/parse/node').Parse;
 
 const graphRequest = path => {
   return httpsRequest.get(`https://graph.accountkit.com/v1.1/${path}`);

@@ -1,6 +1,6 @@
 var https = require('https'),
   crypto = require('crypto');
-var Parse = require('parse/node').Parse;
+var Parse = require('@leapllc/parse/node').Parse;
 
 var OAuth = function(options) {
   if (!options) {

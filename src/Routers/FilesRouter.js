@@ -1,7 +1,7 @@
 import express from 'express';
 import BodyParser from 'body-parser';
 import * as Middlewares from '../middlewares';
-import Parse from 'parse/node';
+import Parse from '@leapllc/parse/node';
 import Config from '../Config';
 import mime from 'mime';
 import logger from '../logger';

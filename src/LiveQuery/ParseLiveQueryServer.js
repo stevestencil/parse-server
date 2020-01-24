@@ -1,5 +1,5 @@
 import tv4 from 'tv4';
-import Parse from 'parse/node';
+import Parse from '@leapllc/parse/node';
 import { Subscription } from './Subscription';
 import { Client } from './Client';
 import { ParseWebSocketServer } from './ParseWebSocketServer';

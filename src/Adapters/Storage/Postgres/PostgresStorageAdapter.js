@@ -1,7 +1,7 @@
 // @flow
 import { createClient } from './PostgresClient';
 // @flow-disable-next
-import Parse from 'parse/node';
+import Parse from '@leapllc/parse/node';
 // @flow-disable-next
 import _ from 'lodash';
 import sql from './sql';

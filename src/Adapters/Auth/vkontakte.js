@@ -3,7 +3,7 @@
 // Helper functions for accessing the vkontakte API.
 
 const httpsRequest = require('./httpsRequest');
-var Parse = require('parse/node').Parse;
+var Parse = require('@leapllc/parse/node').Parse;
 
 // Returns a promise that fulfills iff this user id is valid.
 function validateAuthData(authData, params) {

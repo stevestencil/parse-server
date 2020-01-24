@@ -1,7 +1,7 @@
 import PromiseRouter from '../PromiseRouter';
 const request = require('../request');
 const rest = require('../rest');
-import Parse from 'parse/node';
+import Parse from '@leapllc/parse/node';
 
 // TODO move validation logic in IAPValidationController
 const IAP_SANDBOX_URL = 'https://sandbox.itunes.apple.com/verifyReceipt';

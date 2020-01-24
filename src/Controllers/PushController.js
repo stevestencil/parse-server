@@ -1,4 +1,4 @@
-import { Parse } from 'parse/node';
+import { Parse } from '@leapllc/parse/node';
 import RestQuery from '../RestQuery';
 import RestWrite from '../RestWrite';
 import { master } from '../Auth';

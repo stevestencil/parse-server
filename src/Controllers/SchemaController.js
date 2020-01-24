@@ -15,7 +15,7 @@
 // different databases.
 // TODO: hide all schema logic inside the database adapter.
 // @flow-disable-next
-const Parse = require('parse/node').Parse;
+const Parse = require('@leapllc/parse/node').Parse;
 import { StorageAdapter } from '../Adapters/Storage/StorageAdapter';
 import DatabaseController from './DatabaseController';
 import Config from '../Config';

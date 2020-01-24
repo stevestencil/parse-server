@@ -2,7 +2,7 @@
 // These tests check the "create" / "update" functionality of the REST API.
 const auth = require('../lib/Auth');
 const Config = require('../lib/Config');
-const Parse = require('parse/node').Parse;
+const Parse = require('@leapllc/parse/node').Parse;
 const rest = require('../lib/rest');
 const RestWrite = require('../lib/RestWrite');
 const request = require('../lib/request');

@@ -1,7 +1,7 @@
 import ClassesRouter from './ClassesRouter';
 import rest from '../rest';
 import * as middleware from '../middlewares';
-import Parse from 'parse/node';
+import Parse from '@leapllc/parse/node';
 import UsersRouter from './UsersRouter';
 
 const BASE_KEYS = ['where', 'distinct', 'pipeline', 'hint', 'explain'];

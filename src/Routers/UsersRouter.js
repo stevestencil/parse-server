@@ -1,6 +1,6 @@
 // These methods handle the User-related routes.
 
-import Parse from 'parse/node';
+import Parse from '@leapllc/parse/node';
 import Config from '../Config';
 import AccountLockout from '../AccountLockout';
 import ClassesRouter from './ClassesRouter';

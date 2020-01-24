@@ -1,5 +1,5 @@
 // global_config.js
-import Parse from 'parse/node';
+import Parse from '@leapllc/parse/node';
 import PromiseRouter from '../PromiseRouter';
 import * as middleware from '../middlewares';
 

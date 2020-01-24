@@ -1,4 +1,4 @@
-import { Parse } from 'parse/node';
+import { Parse } from '@leapllc/parse/node';
 import AdaptableController from './AdaptableController';
 import { LoggerAdapter } from '../Adapters/Logger/LoggerAdapter';
 import url from 'url';

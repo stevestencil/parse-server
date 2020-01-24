@@ -8,7 +8,7 @@ const PostgresStorageAdapter = require('../lib/Adapters/Storage/Postgres/Postgre
   .default;
 const postgresURI =
   'postgres://localhost:5432/parse_server_postgres_adapter_test_database';
-const Parse = require('parse/node');
+const Parse = require('@leapllc/parse/node');
 const request = require('../lib/request');
 let databaseAdapter;
 

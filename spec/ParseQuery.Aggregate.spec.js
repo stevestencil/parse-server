@@ -1,5 +1,5 @@
 'use strict';
-const Parse = require('parse/node');
+const Parse = require('@leapllc/parse/node');
 const request = require('../lib/request');
 
 const masterKeyHeaders = {

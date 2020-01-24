@@ -1,6 +1,6 @@
 const ParseCloudCodePublisher = require('../lib/LiveQuery/ParseCloudCodePublisher')
   .ParseCloudCodePublisher;
-const Parse = require('parse/node');
+const Parse = require('@leapllc/parse/node');
 
 describe('ParseCloudCodePublisher', function() {
   beforeEach(function(done) {

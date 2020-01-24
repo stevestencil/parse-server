@@ -1,5 +1,5 @@
 const Config = require('../lib/Config');
-const Parse = require('parse/node');
+const Parse = require('@leapllc/parse/node');
 
 describe('ProtectedFields', function() {
   it('should handle and empty protectedFields', async function() {

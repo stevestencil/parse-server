@@ -1,4 +1,4 @@
-import Parse from 'parse/node';
+import Parse from '@leapllc/parse/node';
 import { GraphQLNonNull, GraphQLList } from 'graphql';
 import { transformToGraphQL } from '../transformers/schemaFields';
 import * as schemaTypes from './schemaTypes';

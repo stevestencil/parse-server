@@ -1,6 +1,6 @@
 var equalObjects = require('./equalObjects');
 var Id = require('./Id');
-var Parse = require('parse/node');
+var Parse = require('@leapllc/parse/node');
 
 /**
  * Query Hashes are deterministic hashes for Parse Queries.

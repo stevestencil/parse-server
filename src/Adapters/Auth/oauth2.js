@@ -53,7 +53,7 @@
  * }
  */
 
-const Parse = require('parse/node').Parse;
+const Parse = require('@leapllc/parse/node').Parse;
 const url = require('url');
 const querystring = require('querystring');
 const httpsRequest = require('./httpsRequest');

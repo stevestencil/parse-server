@@ -1,4 +1,4 @@
-import Parse from 'parse/node';
+import Parse from '@leapllc/parse/node';
 
 const transformToParse = (graphQLSchemaFields, existingFields) => {
   if (!graphQLSchemaFields) {

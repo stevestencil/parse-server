@@ -5,7 +5,7 @@
 // themselves use our routing information, without disturbing express
 // components that external developers may be modifying.
 
-import Parse from 'parse/node';
+import Parse from '@leapllc/parse/node';
 import express from 'express';
 import log from './logger';
 import { inspect } from 'util';

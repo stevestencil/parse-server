@@ -1,7 +1,7 @@
 const Config = require('../lib/Config');
 const sessionToken = 'legacySessionToken';
 const request = require('../lib/request');
-const Parse = require('parse/node');
+const Parse = require('@leapllc/parse/node');
 
 function createUser() {
   const config = Config.get(Parse.applicationId);

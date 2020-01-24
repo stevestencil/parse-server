@@ -6,7 +6,7 @@ const authData = {
   access_token: 'token',
 };
 */
-const { Parse } = require('parse/node');
+const { Parse } = require('@leapllc/parse/node');
 const httpsRequest = require('./httpsRequest');
 
 // Returns a promise that fulfills if this user id is valid.

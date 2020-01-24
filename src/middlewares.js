@@ -1,5 +1,5 @@
 import AppCache from './cache';
-import Parse from 'parse/node';
+import Parse from '@leapllc/parse/node';
 import auth from './Auth';
 import Config from './Config';
 import ClientSDK from './ClientSDK';

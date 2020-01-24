@@ -4,7 +4,7 @@
 
 const auth = require('../lib/Auth');
 const Config = require('../lib/Config');
-const Parse = require('parse/node').Parse;
+const Parse = require('@leapllc/parse/node').Parse;
 const rest = require('../lib/rest');
 const request = require('../lib/request');
 

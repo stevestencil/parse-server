@@ -1,7 +1,7 @@
 import { GraphQLNonNull } from 'graphql';
 import { mutationWithClientMutationId } from 'graphql-relay';
 import { GraphQLUpload } from 'graphql-upload';
-import Parse from 'parse/node';
+import Parse from '@leapllc/parse/node';
 import * as defaultGraphQLTypes from './defaultGraphQLTypes';
 import logger from '../../logger';
 

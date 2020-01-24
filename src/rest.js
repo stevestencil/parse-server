@@ -7,7 +7,7 @@
 // routes. That's useful for the routes that do really similar
 // things.
 
-var Parse = require('parse/node').Parse;
+var Parse = require('@leapllc/parse/node').Parse;
 
 var RestQuery = require('./RestQuery');
 var RestWrite = require('./RestWrite');

@@ -1,6 +1,6 @@
 'use strict';
 
-const Parse = require('parse/node');
+const Parse = require('@leapllc/parse/node');
 const Config = require('../lib/Config');
 
 describe('Uniqueness', function() {

@@ -1,4 +1,4 @@
-import Parse from 'parse/node';
+import Parse from '@leapllc/parse/node';
 import { ApolloError } from 'apollo-server-core';
 
 export function enforceMasterKeyAccess(auth) {

@@ -1,5 +1,5 @@
 // This class handles the Account Lockout Policy settings.
-import Parse from 'parse/node';
+import Parse from '@leapllc/parse/node';
 
 export class AccountLockout {
   constructor(user, config) {

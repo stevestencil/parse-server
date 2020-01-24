@@ -1,5 +1,5 @@
 // Helper functions for accessing the microsoft graph API.
-var Parse = require('parse/node').Parse;
+var Parse = require('@leapllc/parse/node').Parse;
 const httpsRequest = require('./httpsRequest');
 
 // Returns a promise that fulfills if this user mail is valid.

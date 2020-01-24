@@ -3,7 +3,7 @@ import { inflate } from '../triggers';
 import AdaptableController from './AdaptableController';
 import MailAdapter from '../Adapters/Email/MailAdapter';
 import rest from '../rest';
-import Parse from 'parse/node';
+import Parse from '@leapllc/parse/node';
 
 var RestQuery = require('../RestQuery');
 var Auth = require('../Auth');

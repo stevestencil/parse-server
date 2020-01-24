@@ -4,7 +4,7 @@ import express from 'express';
 import path from 'path';
 import fs from 'fs';
 import qs from 'querystring';
-import { Parse } from 'parse/node';
+import { Parse } from '@leapllc/parse/node';
 
 const public_html = path.resolve(__dirname, '../../public_html');
 const views = path.resolve(__dirname, '../../views');

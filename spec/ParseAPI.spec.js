@@ -3,7 +3,7 @@
 'use strict';
 
 const request = require('../lib/request');
-const Parse = require('parse/node');
+const Parse = require('@leapllc/parse/node');
 const Config = require('../lib/Config');
 const SchemaController = require('../lib/Controllers/SchemaController');
 const TestUtils = require('../lib/TestUtils');

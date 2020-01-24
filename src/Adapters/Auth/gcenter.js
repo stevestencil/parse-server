@@ -11,7 +11,7 @@ const authData = {
 };
 */
 
-const { Parse } = require('parse/node');
+const { Parse } = require('@leapllc/parse/node');
 const crypto = require('crypto');
 const https = require('https');
 const url = require('url');

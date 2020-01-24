@@ -1,4 +1,4 @@
-const Parse = require('parse/node');
+const Parse = require('@leapllc/parse/node');
 const ParseLiveQueryServer = require('../lib/LiveQuery/ParseLiveQueryServer')
   .ParseLiveQueryServer;
 const ParseServer = require('../lib/ParseServer').default;

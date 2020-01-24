@@ -8,7 +8,7 @@ var deepcopy = require('deepcopy');
 const Auth = require('./Auth');
 var cryptoUtils = require('./cryptoUtils');
 var passwordCrypto = require('./password');
-var Parse = require('parse/node');
+var Parse = require('@leapllc/parse/node');
 var triggers = require('./triggers');
 var ClientSDK = require('./ClientSDK');
 import RestQuery from './RestQuery';

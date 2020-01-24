@@ -1,5 +1,5 @@
 // Helper functions for accessing the Janrain Capture API.
-var Parse = require('parse/node').Parse;
+var Parse = require('@leapllc/parse/node').Parse;
 var querystring = require('querystring');
 const httpsRequest = require('./httpsRequest');
 

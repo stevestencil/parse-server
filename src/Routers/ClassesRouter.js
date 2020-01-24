@@ -1,7 +1,7 @@
 import PromiseRouter from '../PromiseRouter';
 import rest from '../rest';
 import _ from 'lodash';
-import Parse from 'parse/node';
+import Parse from '@leapllc/parse/node';
 
 const ALLOWED_GET_QUERY_KEYS = [
   'keys',

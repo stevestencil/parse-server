@@ -1,6 +1,6 @@
 const cryptoUtils = require('./cryptoUtils');
 const RestQuery = require('./RestQuery');
-const Parse = require('parse/node');
+const Parse = require('@leapllc/parse/node');
 
 // An Auth object tells you who is requesting something and whether
 // the master key was used.

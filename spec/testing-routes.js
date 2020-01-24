@@ -2,7 +2,7 @@
 const AppCache = require('../lib/cache').default;
 const middlewares = require('../lib/middlewares');
 const { ParseServer } = require('../lib/index');
-const { Parse } = require('parse/node');
+const { Parse } = require('@leapllc/parse/node');
 
 const express = require('express'),
   cryptoUtils = require('../lib/cryptoUtils');

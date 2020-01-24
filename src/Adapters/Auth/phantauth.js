@@ -5,7 +5,7 @@
  * To learn more, please go to: https://www.phantauth.net
  */
 
-const { Parse } = require('parse/node');
+const { Parse } = require('@leapllc/parse/node');
 const httpsRequest = require('./httpsRequest');
 
 // Returns a promise that fulfills if this user id is valid.

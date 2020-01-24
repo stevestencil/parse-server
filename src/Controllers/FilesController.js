@@ -4,7 +4,7 @@ import AdaptableController from './AdaptableController';
 import { validateFilename, FilesAdapter } from '../Adapters/Files/FilesAdapter';
 import path from 'path';
 import mime from 'mime';
-const Parse = require('parse').Parse;
+const Parse = require('@leapllc/parse').Parse;
 
 const legacyFilesRegex = new RegExp(
   '^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}-.*'

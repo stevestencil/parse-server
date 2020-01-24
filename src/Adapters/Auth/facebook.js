@@ -1,6 +1,6 @@
 // Helper functions for accessing the Facebook Graph API.
 const httpsRequest = require('./httpsRequest');
-var Parse = require('parse/node').Parse;
+var Parse = require('@leapllc/parse/node').Parse;
 const crypto = require('crypto');
 
 function getAppSecretPath(authData, options = {}) {

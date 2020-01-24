@@ -21,7 +21,7 @@ import {
   transformPointerString,
 } from './MongoTransform';
 // @flow-disable-next
-import Parse from 'parse/node';
+import Parse from '@leapllc/parse/node';
 // @flow-disable-next
 import _ from 'lodash';
 import defaults from '../../../defaults';

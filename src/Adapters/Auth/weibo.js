@@ -1,6 +1,6 @@
 // Helper functions for accessing the weibo Graph API.
 var httpsRequest = require('./httpsRequest');
-var Parse = require('parse/node').Parse;
+var Parse = require('@leapllc/parse/node').Parse;
 var querystring = require('querystring');
 
 // Returns a promise that fulfills iff this user id is valid.

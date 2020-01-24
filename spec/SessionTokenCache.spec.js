@@ -3,7 +3,7 @@ const SessionTokenCache = require('../lib/LiveQuery/SessionTokenCache')
 
 describe('SessionTokenCache', function() {
   beforeEach(function(done) {
-    const Parse = require('parse/node');
+    const Parse = require('@leapllc/parse/node');
 
     spyOn(Parse, 'Query').and.returnValue({
       first: jasmine.createSpy('first').and.returnValue(

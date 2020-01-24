@@ -1,6 +1,6 @@
 'use strict';
 
-const Parse = require('parse/node').Parse;
+const Parse = require('@leapllc/parse/node').Parse;
 const dd = require('deep-diff');
 const Config = require('../lib/Config');
 const request = require('../lib/request');
