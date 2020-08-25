@@ -17,6 +17,7 @@ const { SubscriptionClient } = require('subscriptions-transport-ws');
 const { WebSocketLink } = require('apollo-link-ws');
 const ApolloClient = require('apollo-client').default;
 const gql = require('graphql-tag');
+const { toGlobalId } = require('graphql-relay');
 const {
   GraphQLObjectType,
   GraphQLString,
@@ -28,7 +29,7 @@ const {
 const { ParseServer } = require('../');
 const { ParseGraphQLServer } = require('../lib/GraphQL/ParseGraphQLServer');
 const ReadPreference = require('mongodb').ReadPreference;
-const uuidv4 = require('uuid/v4');
+const { v4: uuidv4 } = require('uuid');
 
 function handleError(e) {
   if (
@@ -1416,7 +1417,7 @@ describe('ParseGraphQLServer', () => {
         });
       });
 
-      describe('Configuration', function() {
+      describe('Configuration', function () {
         const resetGraphQLCache = async () => {
           await Promise.all([
             parseGraphQLServer.parseGraphQLController.cacheController.graphQL.clear(),
@@ -4416,12 +4417,13 @@ describe('ParseGraphQLServer', () => {
             await parseGraphQLServer.parseGraphQLSchema.databaseController.schemaCache.clear();
 
             async function getObject(className, id, headers) {
+              const alias =
+                className.charAt(0).toLowerCase() + className.slice(1);
               const specificQueryResult = await apolloClient.query({
                 query: gql`
                   query GetSomeObject($id: ID!) {
-                    get: ${className.charAt(0).toLowerCase() +
-                      className.slice(1)}(id: $id) {
-                        id
+                    get: ${alias}(id: $id) {
+                      id
                       createdAt
                       someField
                     }
@@ -6549,6 +6551,9 @@ describe('ParseGraphQLServer', () => {
             await parseGraphQLServer.parseGraphQLSchema.databaseController.schemaCache.clear();
 
             function updateObject(className, id, fields, headers) {
+              const mutationName =
+                className.charAt(0).toLowerCase() + className.slice(1);
+
               return apolloClient.mutate({
                 mutation: gql`
                   mutation UpdateSomeObject(
@@ -6559,8 +6564,7 @@ describe('ParseGraphQLServer', () => {
                       id: $id
                       fields: $fields
                     }) {
-                      ${className.charAt(0).toLowerCase() +
-                        className.slice(1)} {
+                      ${mutationName} {
                         updatedAt
                       }
                     }
@@ -6821,14 +6825,15 @@ describe('ParseGraphQLServer', () => {
             await parseGraphQLServer.parseGraphQLSchema.databaseController.schemaCache.clear();
 
             function deleteObject(className, id, headers) {
+              const mutationName =
+                className.charAt(0).toLowerCase() + className.slice(1);
               return apolloClient.mutate({
                 mutation: gql`
                   mutation DeleteSomeObject(
                     $id: ID!
                   ) {
                     delete: delete${className}(input: { id: $id }) {
-                      ${className.charAt(0).toLowerCase() +
-                        className.slice(1)} {
+                      ${mutationName} {
                         objectId
                       }
                     }
@@ -6921,14 +6926,15 @@ describe('ParseGraphQLServer', () => {
             await parseGraphQLServer.parseGraphQLSchema.databaseController.schemaCache.clear();
 
             function deleteObject(className, id, headers) {
+              const mutationName =
+                className.charAt(0).toLowerCase() + className.slice(1);
               return apolloClient.mutate({
                 mutation: gql`
                   mutation DeleteSomeObject(
                     $id: ID!
                   ) {
                     delete${className}(input: { id: $id }) {
-                      ${className.charAt(0).toLowerCase() +
-                        className.slice(1)} {
+                      ${mutationName} {
                         objectId
                       }
                     }
@@ -7176,6 +7182,56 @@ describe('ParseGraphQLServer', () => {
           expect(sessionToken).toBeDefined();
           expect(resultFoo).toBeDefined();
           expect(resultFoo.bar).toEqual('hello');
+        });
+        it('should return logged user and do not by pass pointer security', async () => {
+          const masterKeyOnlyACL = new Parse.ACL();
+          masterKeyOnlyACL.setPublicReadAccess(false);
+          masterKeyOnlyACL.setPublicWriteAccess(false);
+          const foo = new Parse.Object('Foo');
+          foo.setACL(masterKeyOnlyACL);
+          foo.set('bar', 'hello');
+          await foo.save(null, { useMasterKey: true });
+          const userName = 'userx1',
+            password = 'user1',
+            email = 'emailUserx1@parse.com';
+
+          const user = new Parse.User();
+          user.setUsername(userName);
+          user.setPassword(password);
+          user.setEmail(email);
+          user.set('userFoo', foo);
+          await user.signUp();
+
+          await parseGraphQLServer.parseGraphQLSchema.databaseController.schemaCache.clear();
+
+          const session = await Parse.Session.current();
+          const result = await apolloClient.query({
+            query: gql`
+              query GetCurrentUser {
+                viewer {
+                  sessionToken
+                  user {
+                    id
+                    objectId
+                    userFoo {
+                      bar
+                    }
+                  }
+                }
+              }
+            `,
+            context: {
+              headers: {
+                'X-Parse-Session-Token': session.getSessionToken(),
+              },
+            },
+          });
+
+          const sessionToken = result.data.viewer.sessionToken;
+          const { objectId, userFoo: resultFoo } = result.data.viewer.user;
+          expect(objectId).toEqual(user.id);
+          expect(sessionToken).toBeDefined();
+          expect(resultFoo).toEqual(null);
         });
       });
 
@@ -8284,6 +8340,18 @@ describe('ParseGraphQLServer', () => {
 
           await parseGraphQLServer.parseGraphQLSchema.databaseController.schemaCache.clear();
 
+          const gqlUser = (
+            await apolloClient.query({
+              query: gql`
+                query getUser($id: ID!) {
+                  user(id: $id) {
+                    id
+                  }
+                }
+              `,
+              variables: { id: user.id },
+            })
+          ).data.user;
           const {
             data: { createSomeClass },
           } = await apolloClient.mutate({
@@ -8317,7 +8385,7 @@ describe('ParseGraphQLServer', () => {
               fields: {
                 ACL: {
                   users: [
-                    { userId: user.id, read: true, write: true },
+                    { userId: gqlUser.id, read: true, write: true },
                     { userId: user2.id, read: true, write: false },
                   ],
                   roles: [
@@ -8334,13 +8402,13 @@ describe('ParseGraphQLServer', () => {
             __typename: 'ACL',
             users: [
               {
-                userId: user.id,
+                userId: toGlobalId('_User', user.id),
                 read: true,
                 write: true,
                 __typename: 'UserACL',
               },
               {
-                userId: user2.id,
+                userId: toGlobalId('_User', user2.id),
                 read: true,
                 write: false,
                 __typename: 'UserACL',
@@ -9498,6 +9566,29 @@ describe('ParseGraphQLServer', () => {
 
             expect(res.status).toEqual(200);
             expect(await res.text()).toEqual('My File Content');
+
+            const mutationResult = await apolloClient.mutate({
+              mutation: gql`
+                mutation UnlinkFile($id: ID!) {
+                  updateSomeClass(
+                    input: { id: $id, fields: { someField: { file: null } } }
+                  ) {
+                    someClass {
+                      someField {
+                        name
+                        url
+                      }
+                    }
+                  }
+                }
+              `,
+              variables: {
+                id: result2.data.createSomeClass3.someClass.id,
+              },
+            });
+            expect(
+              mutationResult.data.updateSomeClass.someClass.someField
+            ).toEqual(null);
           } catch (e) {
             handleError(e);
           }
@@ -10679,6 +10770,52 @@ describe('ParseGraphQLServer', () => {
 
         expect(result.data.hello2).toEqual('Hello world!');
       });
+
+      it('order option should continue working', async () => {
+        const schemaController = await parseServer.config.databaseController.loadSchema();
+
+        await schemaController.addClassIfNotExists('SuperCar', {
+          engine: { type: 'String' },
+          doors: { type: 'Number' },
+          price: { type: 'String' },
+          mileage: { type: 'Number' },
+        });
+
+        await new Parse.Object('SuperCar').save({
+          engine: 'petrol',
+          doors: 3,
+          price: '£7500',
+          mileage: 0,
+        });
+
+        await new Parse.Object('SuperCar').save({
+          engine: 'petrol',
+          doors: 3,
+          price: '£7500',
+          mileage: 10000,
+        });
+
+        await Promise.all([
+          parseGraphQLServer.parseGraphQLController.cacheController.graphQL.clear(),
+          parseGraphQLServer.parseGraphQLSchema.databaseController.schemaCache.clear(),
+        ]);
+
+        await expectAsync(
+          apolloClient.query({
+            query: gql`
+              query FindSuperCar {
+                superCars(order: [mileage_ASC]) {
+                  edges {
+                    node {
+                      id
+                    }
+                  }
+                }
+              }
+            `,
+          })
+        ).toBeResolved();
+      });
     });
 
     describe('SDL Based', () => {
@@ -10699,57 +10836,70 @@ describe('ParseGraphQLServer', () => {
             robot: { value: 'robot' },
           },
         });
-        parseGraphQLServer = new ParseGraphQLServer(parseServer, {
-          graphQLPath: '/graphql',
-          graphQLCustomTypeDefs: new GraphQLSchema({
-            query: new GraphQLObjectType({
-              name: 'Query',
-              fields: {
-                customQuery: {
-                  type: new GraphQLNonNull(GraphQLString),
-                  args: {
-                    message: { type: new GraphQLNonNull(GraphQLString) },
-                  },
-                  resolve: (p, { message }) => message,
-                },
+        const SomeClassType = new GraphQLObjectType({
+            name: 'SomeClass',
+            fields: {
+              nameUpperCase: {
+                type: new GraphQLNonNull(GraphQLString),
+                resolve: p => p.name.toUpperCase(),
               },
-            }),
-            types: [
-              new GraphQLInputObjectType({
-                name: 'CreateSomeClassFieldsInput',
-                fields: {
-                  type: { type: TypeEnum },
-                },
-              }),
-              new GraphQLInputObjectType({
-                name: 'UpdateSomeClassFieldsInput',
-                fields: {
-                  type: { type: TypeEnum },
-                },
-              }),
-              new GraphQLObjectType({
-                name: 'SomeClass',
-                fields: {
-                  nameUpperCase: {
-                    type: new GraphQLNonNull(GraphQLString),
-                    resolve: p => p.name.toUpperCase(),
+              type: { type: TypeEnum },
+              language: {
+                type: new GraphQLEnumType({
+                  name: 'LanguageEnum',
+                  values: {
+                    fr: { value: 'fr' },
+                    en: { value: 'en' },
                   },
-                  type: { type: TypeEnum },
-                  language: {
-                    type: new GraphQLEnumType({
-                      name: 'LanguageEnum',
-                      values: {
-                        fr: { value: 'fr' },
-                        en: { value: 'en' },
-                      },
-                    }),
-                    resolve: () => 'fr',
-                  },
-                },
-              }),
-            ],
+                }),
+                resolve: () => 'fr',
+              },
+            },
           }),
-        });
+          parseGraphQLServer = new ParseGraphQLServer(parseServer, {
+            graphQLPath: '/graphql',
+            graphQLCustomTypeDefs: new GraphQLSchema({
+              query: new GraphQLObjectType({
+                name: 'Query',
+                fields: {
+                  customQuery: {
+                    type: new GraphQLNonNull(GraphQLString),
+                    args: {
+                      message: { type: new GraphQLNonNull(GraphQLString) },
+                    },
+                    resolve: (p, { message }) => message,
+                  },
+                  customQueryWithAutoTypeReturn: {
+                    type: SomeClassType,
+                    args: {
+                      id: { type: new GraphQLNonNull(GraphQLString) },
+                    },
+                    resolve: async (p, { id }) => {
+                      const obj = new Parse.Object('SomeClass');
+                      obj.id = id;
+                      await obj.fetch();
+                      return obj.toJSON();
+                    },
+                  },
+                },
+              }),
+              types: [
+                new GraphQLInputObjectType({
+                  name: 'CreateSomeClassFieldsInput',
+                  fields: {
+                    type: { type: TypeEnum },
+                  },
+                }),
+                new GraphQLInputObjectType({
+                  name: 'UpdateSomeClassFieldsInput',
+                  fields: {
+                    type: { type: TypeEnum },
+                  },
+                }),
+                SomeClassType,
+              ],
+            }),
+          });
 
         parseGraphQLServer.applyGraphQL(expressApp);
         await new Promise(resolve =>
@@ -10787,6 +10937,33 @@ describe('ParseGraphQLServer', () => {
         expect(result.data.customQuery).toEqual('hello');
       });
 
+      it('can resolve a custom query with auto type return', async () => {
+        const obj = new Parse.Object('SomeClass');
+        await obj.save({ name: 'aname', type: 'robot' });
+        await parseGraphQLServer.parseGraphQLSchema.databaseController.schemaCache.clear();
+        const result = await apolloClient.query({
+          variables: { id: obj.id },
+          query: gql`
+            query CustomQuery($id: String!) {
+              customQueryWithAutoTypeReturn(id: $id) {
+                objectId
+                nameUpperCase
+                name
+                type
+              }
+            }
+          `,
+        });
+        expect(result.data.customQueryWithAutoTypeReturn.objectId).toEqual(
+          obj.id
+        );
+        expect(result.data.customQueryWithAutoTypeReturn.name).toEqual('aname');
+        expect(result.data.customQueryWithAutoTypeReturn.nameUpperCase).toEqual(
+          'ANAME'
+        );
+        expect(result.data.customQueryWithAutoTypeReturn.type).toEqual('robot');
+      });
+
       it('can resolve a custom extend type', async () => {
         const obj = new Parse.Object('SomeClass');
         await obj.save({ name: 'aname', type: 'robot' });
@@ -10821,11 +10998,11 @@ describe('ParseGraphQLServer', () => {
         expect(result2.data.someClass.name).toEqual('aname');
         expect(result.data.someClass.language).toEqual('fr');
         const result3 = await apolloClient.mutate({
-          variables: { id: obj.id, name: 'anewname' },
+          variables: { id: obj.id, name: 'anewname', type: 'human' },
           mutation: gql`
-            mutation someClass($id: ID!, $name: String!) {
+            mutation someClass($id: ID!, $name: String!, $type: TypeEnum!) {
               updateSomeClass(
-                input: { id: $id, fields: { name: $name, type: human } }
+                input: { id: $id, fields: { name: $name, type: $type } }
               ) {
                 someClass {
                   nameUpperCase
@@ -10854,8 +11031,8 @@ describe('ParseGraphQLServer', () => {
         httpServer = http.createServer(expressApp);
         parseGraphQLServer = new ParseGraphQLServer(parseServer, {
           graphQLPath: '/graphql',
-          graphQLCustomTypeDefs: ({ autoSchema, mergeSchemas }) =>
-            mergeSchemas({ schemas: [autoSchema] }),
+          graphQLCustomTypeDefs: ({ autoSchema, stitchSchemas }) =>
+            stitchSchemas({ subschemas: [autoSchema] }),
         });
 
         parseGraphQLServer.applyGraphQL(expressApp);

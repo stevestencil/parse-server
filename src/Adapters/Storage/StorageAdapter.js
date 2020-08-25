@@ -92,7 +92,8 @@ export interface StorageAdapter {
     schema: SchemaType,
     fieldNames: string[],
     indexName?: string,
-    caseSensitive?: boolean
+    caseSensitive?: boolean,
+    options?: Object,
   ): Promise<any>;
   ensureUniqueness(
     className: string,

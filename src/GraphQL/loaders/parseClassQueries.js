@@ -8,13 +8,20 @@ import { ParseGraphQLClassConfig } from '../../Controllers/ParseGraphQLControlle
 import { transformClassNameToGraphQL } from '../transformers/className';
 import { extractKeysAndInclude } from '../parseGraphQLUtils';
 
-const getParseClassQueryConfig = function(
+const getParseClassQueryConfig = function (
   parseClassConfig: ?ParseGraphQLClassConfig
 ) {
   return (parseClassConfig && parseClassConfig.query) || {};
 };
 
-const getQuery = async (parseClass, _source, args, context, queryInfo) => {
+const getQuery = async (
+  parseClass,
+  _source,
+  args,
+  context,
+  queryInfo,
+  parseClasses
+) => {
   let { id } = args;
   const { options } = args;
   const { readPreference, includeReadPreference } = options || {};
@@ -39,11 +46,11 @@ const getQuery = async (parseClass, _source, args, context, queryInfo) => {
     config,
     auth,
     info,
-    parseClass
+    parseClasses
   );
 };
 
-const load = function(
+const load = function (
   parseGraphQLSchema,
   parseClass,
   parseClassConfig: ?ParseGraphQLClassConfig
@@ -80,7 +87,14 @@ const load = function(
       ),
       async resolve(_source, args, context, queryInfo) {
         try {
-          return await getQuery(parseClass, _source, args, context, queryInfo);
+          return await getQuery(
+            parseClass,
+            _source,
+            args,
+            context,
+            queryInfo,
+            parseGraphQLSchema.parseClasses
+          );
         } catch (e) {
           parseGraphQLSchema.handleError(e);
         }
@@ -122,8 +136,8 @@ const load = function(
 
           const { keys, include } = extractKeysAndInclude(
             selectedFields
-              .filter(field => field.startsWith('edges.node.'))
-              .map(field => field.replace('edges.node.', ''))
+              .filter((field) => field.startsWith('edges.node.'))
+              .map((field) => field.replace('edges.node.', ''))
           );
           const parseOrder = order && order.join(',');
 
